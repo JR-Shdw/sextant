@@ -1,0 +1,30 @@
+{% extends "base.html.j2" %}
+{% block title %}{{ entity }} — {{ "ajouter" if is_new else item.get("id") }}{% endblock %}
+{% block content %}
+<section>
+  <h2>{{ entity }} — {{ "ajouter" if is_new else "éditer " + item.get("id", "") }}</h2>
+  <form method="post" action="/catalog/{{ entity }}">
+    {% if not is_new %}
+    <input type="hidden" name="__original_id" value="{{ item.get('id', '') }}">
+    {% endif %}
+    {% for name, typ, opt, hint in fields %}
+    <label for="f_{{ name }}">
+      {{ name }}{% if not opt %} *{% endif %}
+      {% if hint %}<span class="hint">— {{ hint }}</span>{% endif %}
+    </label>
+    {% set v = item.get(name) %}
+    {% if typ == "list_str" %}
+      <input type="text" id="f_{{ name }}" name="{{ name }}" value="{{ v|join(', ') if v else '' }}">
+    {% elif typ == "int" %}
+      <input type="number" id="f_{{ name }}" name="{{ name }}" value="{{ v if v is not none else '' }}">
+    {% else %}
+      <input type="text" id="f_{{ name }}" name="{{ name }}" value="{{ v if v is not none else '' }}">
+    {% endif %}
+    {% endfor %}
+    <div class="actions">
+      <button type="submit">enregistrer</button>
+      <a href="/catalog/{{ entity }}" class="btn">annuler</a>
+    </div>
+  </form>
+</section>
+{% endblock %}

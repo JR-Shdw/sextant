@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+# vault-get <namespace>/<secret>
+# Récupère la valeur d'un secret vault rhorizon (local prioritaire, fallback distant).
+# Aucun token statique on-disk. Token rhorizon lu à l'usage.
+
+set -euo pipefail
+
+[[ $# -eq 1 && "$1" =~ ^[^/]+/.+$ ]] || { echo "usage: vault-get <namespace>/<secret>" >&2; exit 2; }
+
+ns="${1%%/*}"
+secret="${1#*/}"
+
+RH_TOKEN_FILE="${RH_TOKEN_FILE:-$HOME/dev/tools/rhorizon_local/.rhorizon-creds/token}"
+VAULT_LOCAL="${VAULT_LOCAL:-http://127.0.0.1:8200}"
+VAULT_REMOTE="${VAULT_REMOTE:-}"
+
+[[ -r "$RH_TOKEN_FILE" ]] || { echo "vault-get: token rhorizon absent ($RH_TOKEN_FILE)" >&2; exit 1; }
+RH_TOK=$(<"$RH_TOKEN_FILE")
+
+fetch() {
+  [[ -n "$1" ]] || return 1
+  curl -sS -m 3 -H "Authorization: Bearer $RH_TOK" \
+    "${1}/api/v1/vault/secrets/${secret}?namespace=${ns}" 2>/dev/null \
+    | python3 -c "import sys,json
+try: print(json.load(sys.stdin)['value'])
+except Exception: sys.exit(1)" 2>/dev/null
+}
+
+fetch "$VAULT_LOCAL" || fetch "$VAULT_REMOTE" || { echo "vault-get: secret ${ns}/${secret} inaccessible" >&2; exit 1; }

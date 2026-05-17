@@ -1,0 +1,33 @@
+# Venv local
+.venv/
+
+# Catalogue généré
+catalog/files.yaml
+
+# Catalogue peuplé localement (jamais publié)
+# Décommente les lignes ci-dessous si tu peuples les YAML avec des données prod
+# et que tu publies ce repo en open-source. Sinon laisse commenté.
+# catalog/forges.yaml
+# catalog/nodes.yaml
+# catalog/vaults.yaml
+# catalog/projects.yaml
+
+# Dossiers projet locaux (notes/tâches non publiées)
+# À décommenter selon ta politique :
+# */user/
+# */claude/
+# */openai/
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# IDE
+.vscode/
+.idea/
+
+# Git credentials locaux (jamais publier)
+.git-credentials
+.git-credentials.local
+.git-credential-vault

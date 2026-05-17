@@ -1,0 +1,33 @@
+# Pipeline minimal sextant — lint + sanity check
+# Convention : test → build → deploy. Ici Phase 0, lint uniquement.
+
+when:
+  - event: [push, pull_request, manual]
+
+steps:
+  ruff:
+    image: python:3.12-slim
+    commands:
+      - pip install --quiet ruff
+      - ruff check tools/
+
+  py-compile:
+    image: python:3.12-slim
+    commands:
+      - python -m py_compile tools/catalog_lint.py
+      - python -m py_compile tools/catalog_scan.py
+      - python -m py_compile tools/task_emit.py
+      - python -m py_compile tools/project_init.py
+      - python -m py_compile tools/project_del.py
+      - python -m py_compile tools/leak_scan.py
+
+  catalog-lint:
+    image: python:3.12-slim
+    commands:
+      - pip install --quiet -r tools/requirements.txt
+      - python tools/catalog_lint.py
+
+  leak-scan:
+    image: python:3.12-slim
+    commands:
+      - python tools/leak_scan.py

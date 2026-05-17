@@ -1,0 +1,16 @@
+{% extends "base.html.j2" %}
+{% block title %}{{ path }}{% endblock %}
+{% block content %}
+<section>
+  <h2><code>{{ path }}</code></h2>
+  <form method="post" action="/edit">
+    <input type="hidden" name="path" value="{{ path }}">
+    <textarea name="content" spellcheck="false">{{ content }}</textarea>
+    <div class="actions">
+      <button type="submit">enregistrer</button>
+      <a href="/files" class="btn">retour fichiers</a>
+      <a href="/download?path={{ path }}" class="btn">télécharger</a>
+    </div>
+  </form>
+</section>
+{% endblock %}

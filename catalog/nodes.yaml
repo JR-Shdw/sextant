@@ -1,0 +1,22 @@
+# Nodes (serveurs, workstations)
+# Schema:
+#   id            kebab-case court, ex: srv-ci, workstation
+#   hostname      nom DNS court
+#   public_ip     IP publique (ou null)
+#   private_ip    IP réseau privé / VPN (ou null)
+#   role          rôle fonctionnel
+#   os            ex: debian-12, arch, manjaro
+#   services      [list], ex: [gitea, woodpecker]
+#   status        active | maintenance | retired
+#
+# Exemple (à dé-commenter et adapter localement, ne PAS commit en prod) :
+# - id: srv-ci
+#   hostname: srv-ci
+#   public_ip: null
+#   private_ip: 10.0.0.10
+#   role: ci-cd
+#   os: debian-12
+#   services: [gitea, woodpecker]
+#   status: active
+
+[]

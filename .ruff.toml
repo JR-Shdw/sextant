@@ -1,0 +1,21 @@
+line-length = 100
+target-version = "py311"
+
+[lint]
+select = [
+  "E",    # pycodestyle errors
+  "W",    # pycodestyle warnings
+  "F",    # pyflakes
+  "I",    # isort
+  "B",    # flake8-bugbear
+  "UP",   # pyupgrade
+  "SIM",  # flake8-simplify
+]
+ignore = [
+  "E501",  # line too long (already enforced by line-length)
+  "B008",  # function call in default — pattern canonical de typer
+]
+
+[format]
+quote-style = "double"
+indent-style = "space"

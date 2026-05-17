@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# push-org-chronolion <fichier.org>
+# Pousse le contenu d'un fichier .org dans chronolion (POST /api/me/tasks/import-org).
+
+set -euo pipefail
+
+[[ $# -eq 1 && -r "$1" ]] || { echo "usage: push-org-chronolion <fichier.org>" >&2; exit 2; }
+
+CHRONOLION_URL="${CHRONOLION_URL:-http://127.0.0.1:8000}"
+
+body=$(python3 -c "import sys,json; print(json.dumps({'content': open(sys.argv[1]).read()}))" "$1")
+
+curl -sS -X POST -H "Content-Type: application/json" -d "$body" \
+  "${CHRONOLION_URL}/api/me/tasks/import-org"
+echo

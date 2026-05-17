@@ -1,0 +1,9 @@
+# IPs RFC1918 autorisees dans le repo (exemples documentes uniquement).
+# Format : une IP par ligne. # pour commenter. Pas de prefixes ni de wildcards.
+# Toute IP RFC1918 hors de cette liste fait echouer tools/leak_scan.py.
+
+# Exemple template dans catalog/vaults.yaml
+10.0.0.1
+
+# Exemple template dans catalog/nodes.yaml
+10.0.0.10

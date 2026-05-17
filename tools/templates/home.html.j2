@@ -1,0 +1,19 @@
+{% extends "base.html.j2" %}
+{% block title %}accueil{% endblock %}
+{% block content %}
+<section>
+  <h2>Catalog</h2>
+  <table>
+    <tbody>
+      <tr><td><a href="/catalog/projects">Projets</a></td><td>{{ counts.projects }}</td></tr>
+      <tr><td><a href="/catalog/forges">Forges</a></td><td>{{ counts.forges }}</td></tr>
+      <tr><td><a href="/catalog/nodes">Nodes</a></td><td>{{ counts.nodes }}</td></tr>
+      <tr><td><a href="/catalog/vaults">Vaults</a></td><td>{{ counts.vaults }}</td></tr>
+    </tbody>
+  </table>
+</section>
+<section>
+  <h2>Fichiers</h2>
+  <p><a href="/files">Explorer les {{ file_count }} fichiers du repo</a></p>
+</section>
+{% endblock %}

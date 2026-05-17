@@ -1,0 +1,44 @@
+{% extends "base.html.j2" %}
+{% block title %}{{ entity }}{% endblock %}
+{% block content %}
+<section>
+  <h2>{{ entity }}</h2>
+  <div class="actions">
+    <a href="/catalog/{{ entity }}/new" class="btn">+ ajouter</a>
+  </div>
+  {% if items %}
+  <table>
+    <thead>
+      <tr>
+        {% for name, typ, opt, hint in fields %}<th>{{ name }}</th>{% endfor %}
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in items %}
+      <tr>
+        {% for name, typ, opt, hint in fields %}
+        <td>
+          {% set v = item.get(name) %}
+          {% if v is none or (v is iterable and v is not string and v|length == 0) %}<span class="muted">—</span>
+          {% elif v is iterable and v is not string %}<ul class="chips">{% for x in v %}<li>{{ x }}</li>{% endfor %}</ul>
+          {% else %}{{ v }}
+          {% endif %}
+        </td>
+        {% endfor %}
+        <td>
+          <a href="/catalog/{{ entity }}/{{ item.id }}" class="btn">edit</a>
+          {% if entity == "projects" %}<a href="/files?project={{ item.id }}" class="btn">fichiers</a>{% endif %}
+          <form class="inline" method="post" action="/catalog/{{ entity }}/{{ item.id }}/delete" onsubmit="return confirm('Supprimer {{ item.id }} ?');">
+            <button type="submit" class="danger">del</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="empty">Aucun item. Clique "+ ajouter".</p>
+  {% endif %}
+</section>
+{% endblock %}

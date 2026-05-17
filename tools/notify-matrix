@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# notify-matrix "<message>"
+# Envoie un message dans la room matrix du user (creds via vault claude/).
+
+set -euo pipefail
+
+[[ $# -ge 1 ]] || { echo "usage: notify-matrix <message>" >&2; exit 2; }
+msg="$*"
+
+HERE="$(cd "$(dirname "$0")" && pwd)"
+TOK=$("$HERE/vault-get" claude/matrix-claude-token)
+ROOM=$("$HERE/vault-get" claude/matrix-claude-room)
+HOST="${MATRIX_HOST:-https://msg.c0re.me}"
+TXN=$(date +%s%N)
+
+body=$(python3 -c "import sys,json; print(json.dumps({'msgtype':'m.text','body':sys.argv[1]}))" "$msg")
+
+curl -sS -X PUT -H "Authorization: Bearer $TOK" -H "Content-Type: application/json" \
+  -d "$body" \
+  "${HOST}/_matrix/client/v3/rooms/${ROOM}/send/m.room.message/${TXN}" > /dev/null
+echo "matrix: envoyé"

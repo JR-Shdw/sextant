@@ -1,0 +1,21 @@
+# Forges (git hosting)
+# Schema:
+#   id            kebab-case court, ex: gitea-main, gitea-public
+#   name          nom lisible
+#   url           https://...
+#   node_id       FK vers nodes.yaml (ou null)
+#   secret_ref    "<namespace>/<key>" dans le vault (pas le token en clair)
+#   status        active | planned | archived
+#
+# Accès credentials : exclusivement via le helper git-credential-vault qui
+# interroge le vault au runtime. Pas de SSH, pas de token statique sur disque.
+#
+# Exemple (à dé-commenter et adapter localement, ne PAS commit en prod) :
+# - id: gitea-main
+#   name: Gitea (instance principale)
+#   url: https://git.example.com
+#   node_id: srv-ci
+#   secret_ref: ai/gitea-main-token
+#   status: active
+
+[]

@@ -1,0 +1,23 @@
+# Projects
+# Schema:
+#   id                kebab-case court (ex: my-app, my-app-frontend)
+#   name              nom lisible
+#   path              chemin du code source relatif à ~/dev/ (ou null)
+#   forge_id          FK vers forges.yaml
+#   repo              nom du repo dans la forge
+#   node_ids          [list] FKs vers nodes.yaml
+#   vault_namespace   namespace dans vaults.yaml (ou null)
+#   status            active | planned | production | archived | unknown
+#   notes             optionnel, court
+#
+# Exemple (à dé-commenter et adapter localement, ne PAS commit en prod) :
+# - id: my-app
+#   name: My App
+#   path: my-app
+#   forge_id: gitea-main
+#   repo: my-app
+#   node_ids: [srv-ci, workstation]
+#   vault_namespace: projects
+#   status: active
+
+[]

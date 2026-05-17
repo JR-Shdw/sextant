@@ -1,0 +1,20 @@
+# Vaults (gestion de secrets)
+# Schema:
+#   id                kebab-case court
+#   endpoint          URL interne (jamais d'IP publique en clair ici)
+#   public_dns        DNS public si applicable, null sinon
+#   node_id           FK vers nodes.yaml (ou null)
+#   namespaces        [list] de namespaces logiques
+#   token_secret_ref  pointeur vers où trouver le token d'accès, ou "external"
+#   status            active | planned | archived
+#
+# Exemple (à dé-commenter et adapter localement, ne PAS commit en prod) :
+# - id: vault-main
+#   endpoint: http://10.0.0.1:8200
+#   public_dns: null
+#   node_id: srv-vault
+#   namespaces: [ai, infra, projects]
+#   token_secret_ref: external
+#   status: active
+
+[]

@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+# user-task <projet> "<titre>" [--priority A|B|C] [--deadline YYYY-MM-DD] [--no-push] [--no-notify]
+#
+# Quand l'IA rencontre une tâche qui nécessite une intervention humaine,
+# elle lance CECI au lieu de la diluer dans la doc/CLAUDE.md/notes :
+#   1. ajoute la tâche dans <projet>/user/tasks.org (chronolion-importable)
+#   2. push dans chronolion
+#   3. notifie le user via matrix
+#
+# C'est l'unique chemin pour qu'une tâche humaine sorte du brouillard.
+
+set -euo pipefail
+
+HERE="$(cd "$(dirname "$0")" && pwd)"
+REPO="$(cd "$HERE/.." && pwd)"
+VENV_PY="$REPO/.venv/bin/python"
+
+PROJ=""
+TITLE=""
+PRIORITY=""
+DEADLINE=""
+DO_PUSH=1
+DO_NOTIFY=1
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --priority) PRIORITY="$2"; shift 2;;
+    --deadline) DEADLINE="$2"; shift 2;;
+    --no-push)   DO_PUSH=0; shift;;
+    --no-notify) DO_NOTIFY=0; shift;;
+    -h|--help) sed -n '1,12p' "$0"; exit 0;;
+    *)
+      if [[ -z "$PROJ" ]]; then PROJ="$1"
+      elif [[ -z "$TITLE" ]]; then TITLE="$1"
+      else echo "argument inattendu: $1" >&2; exit 2
+      fi
+      shift;;
+  esac
+done
+
+[[ -n "$PROJ" && -n "$TITLE" ]] || { sed -n '1,12p' "$0" >&2; exit 2; }
+
+# 1. ajoute dans <projet>/user/tasks.org
+emit_args=( "$PROJ" "$TITLE" )
+[[ -n "$PRIORITY" ]] && emit_args+=( --priority "$PRIORITY" )
+[[ -n "$DEADLINE" ]] && emit_args+=( --deadline "$DEADLINE" )
+"$VENV_PY" "$REPO/tools/task_emit.py" "${emit_args[@]}"
+
+# 2. push dans chronolion
+if [[ $DO_PUSH -eq 1 ]]; then
+  "$HERE/push-org-chronolion" "$REPO/$PROJ/user/tasks.org" || echo "(push chronolion KO — voir helpers/claude/user-task.md)" >&2
+fi
+
+# 3. notif matrix
+if [[ $DO_NOTIFY -eq 1 ]]; then
+  msg="[$PROJ] nouvelle tâche: $TITLE"
+  [[ -n "$PRIORITY" ]] && msg="$msg (priorité $PRIORITY)"
+  [[ -n "$DEADLINE" ]] && msg="$msg (deadline $DEADLINE)"
+  "$HERE/notify-matrix" "$msg" || echo "(notif matrix KO — voir helpers/claude/user-task.md)" >&2
+fi
