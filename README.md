@@ -1,26 +1,36 @@
 # sextant
 
-Catalogue minimaliste + helpers multi-audience pour solo opérateurs self-hosted.
+Catalogue minimaliste et helpers multi-audience pour solo opérateurs self-hosted.
 
 Inspiration : un instrument de navigation qui donne ta position avec quelques mesures simples. Ici, on donne à une IA (Claude, OpenAI, ta plateforme locale) la position de ton écosystème — projets, forges, nodes, vaults, fichiers — en quelques centaines de tokens au lieu de plusieurs dizaines de milliers.
 
-## Pour quoi faire
+## À quoi ça sert
 
 - Rassembler en un seul endroit la liste des projets, leurs repos, leurs forges, les nodes qui les hébergent.
 - Séparer strictement par audience (`user/`, `claude/`, `openai/`, `shared/`) pour ne plus mélanger tâches humaines, notes IA et docs clients.
 - Permettre à toute IA qui débarque de répondre depuis un point d'entrée unique (`MAP.md`) sans aspirer tout le contexte.
 
-## Pour démarrer
+Pour la motivation détaillée et les chiffres d'économie de tokens : `philosophie.md`.
 
-- **Toi (humain)** : `make install && make serve` puis ouvre http://127.0.0.1:8001.
-- **Une IA** : lit `MAP.md` puis grep le YAML pertinent dans `catalog/`.
+## Démarrer
+
+```bash
+git clone <forge>:<user>/sextant.git
+cd sextant
+make install
+```
+
+Puis suivre `QUICKSTART.md` (cinq minutes, premier projet bout en bout).
+
+Une fois en place : `make serve` ouvre l'UI CRUD locale sur `http://127.0.0.1:8001` ; une IA se borne à lire `MAP.md` puis à grep le YAML pertinent.
 
 ## Arborescence
 
 ```
 sextant/
-├── MAP.md                # point d'entrée IA (≤60 lignes)
-├── README.md             # ce fichier (point d'entrée humain)
+├── MAP.md                # point d'entrée IA (≤80 lignes)
+├── QUICKSTART.md         # walkthrough humain, premier projet
+├── philosophie.md        # pourquoi sextant existe, économies mesurées
 ├── catalog/              # sources de vérité YAML
 │   ├── projects.yaml
 │   ├── forges.yaml
@@ -32,24 +42,12 @@ sextant/
 │   ├── claude/
 │   └── openai/
 ├── tools/                # outillage Python (serveur, lint, scan, scaffold)
-└── <projet>/             # dossier par projet
+└── <projet>/             # un dossier par projet déclaré dans catalog/
     ├── user/             # tasks.org, notes.org, helpers user
     ├── claude/           # main.md, helpers Claude
     ├── openai/           # main.md, helpers OpenAI
     ├── shared/           # doc client/générale
-    └── last/             # état de la dernière session (cf. MAP.md)
-```
-
-## Outils
-
-Chaque outil est un CLI typer single-file. Activer le venv puis :
-
-```bash
-source .venv/bin/activate
-
-python tools/catalog_lint.py            # valide les YAML
-python tools/catalog_scan.py            # régénère catalog/files.yaml
-python tools/task_emit.py my-app "Faire la revue sprint 5" --priority A
+    └── last/             # état de la dernière session
 ```
 
 ## Conventions
@@ -58,19 +56,25 @@ python tools/task_emit.py my-app "Faire la revue sprint 5" --priority A
 - Secrets : jamais en clair. Le YAML stocke un `secret_ref: <namespace>/<key>` qui pointe vers ton vault.
 - `.org` dans `user/`, `.md` ailleurs.
 - Pas de duplication entre `catalog/` et `helpers/`.
-- **Reprise de session** : chaque projet a un `last/session.md` que l'IA doit lire au début de session, valider, écraser avec la tâche du jour. Détails dans `MAP.md`.
+- **Reprise de session** : chaque projet a un `last/session.md` que l'IA doit lire au début, valider, écraser avec la tâche du jour. Détails dans `MAP.md`.
 
-Détails dans `MAP.md`.
+## Outils
 
-## Installation
+| Cible | Rôle |
+|---|---|
+| `make install` | crée `.venv` et installe les dépendances |
+| `make lint` | valide les YAML du `catalog/` (schéma + FKs) |
+| `make scan` | régénère `catalog/files.yaml` (index des fichiers) |
+| `make leak-scan` | échoue sur toute IP RFC1918 hors `.leakscan-allow` |
+| `make serve` | sert l'UI CRUD sur `127.0.0.1:8001` |
+| `tools/project_init.py <id>` | scaffold un dossier projet (cinq audiences) |
+| `tools/user-task <projet> "<titre>"` | crée une tâche humaine canonique |
 
-```bash
-git clone <forge>:<user>/sextant.git
-cd sextant
-make install   # ou: python3 -m venv .venv && .venv/bin/pip install -r tools/requirements.txt
-```
+## Repo public, contenu privé
 
-Puis peuple les YAML de `catalog/` selon ton infra (les fichiers livrés sont des squelettes vides avec exemples commentés).
+Tous les défauts d'outils pointent sur `127.0.0.1` ou exigent une variable d'environnement. Aucune IP de réseau privé n'est commitée. Le garde-fou `tools/leak_scan.py` (intégré à la CI Woodpecker) refait le tour à chaque push : si une IP RFC1918 apparaît hors allowlist, le build casse.
+
+Pour publier un fork avec ton propre catalog peuplé : ajoute les chemins sensibles à `.gitignore` (les lignes commentées sont déjà prêtes) ou tiens deux working trees séparés, l'un public, l'autre privé.
 
 ## Licence
 
