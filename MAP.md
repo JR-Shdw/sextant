@@ -99,6 +99,4 @@ Venv local : `.venv/` (racine). `make install` pour le créer.
 
 ## Commandes Claude Code
 
-| Commande | Rôle | Définition |
-|---|---|---|
-| `/sextant-wrap <projet>` | clôt la session, propose un diff de `<projet>/last/session.md` avant écriture | `.claude/commands/sextant-wrap.md` |
+- `/sextant-wrap <projet>` : diff `<projet>/last/session.md`, écrit sur OK (`.claude/commands/sextant-wrap.md`).

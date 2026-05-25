@@ -71,7 +71,7 @@ sextant/
 
 ## Commandes Claude Code
 
-Le repo embarque `.claude/commands/sextant-wrap.md` : depuis Claude Code, `/sextant-wrap <projet>` clôt la session courante et propose un diff de `<projet>/last/session.md` (validation explicite avant écriture).
+`/sextant-wrap <projet>` — propose un diff de `<projet>/last/session.md`, écrit sur validation. Source : `.claude/commands/sextant-wrap.md`.
 
 ## Licence
 
