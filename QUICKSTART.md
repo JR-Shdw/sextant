@@ -103,16 +103,7 @@ L'UI est en lecture-écriture sans auth, restreinte aux réseaux loopback / RFC1
 
 ## 7. Avant de publier ton fork
 
-Si tu pousses ton sextant peuplé sur un dépôt public :
-
-```bash
-make leak-scan
-# attendu : leak-scan: OK (0 leak)
-```
-
-Cette cible est aussi dans la CI Woodpecker (`.woodpecker.yml`). Toute IP RFC1918 commitée hors `.leakscan-allow` casse le build.
-
-Pour les nodes/vaults qui ne doivent jamais quitter ta machine, décommente les lignes correspondantes dans `.gitignore`.
+Pour les nodes/vaults qui ne doivent jamais quitter ta machine, décommente les lignes correspondantes dans `.gitignore`. Tu peux aussi tenir deux working trees distincts, l'un public, l'autre privé.
 
 ## Pour aller plus loin
 

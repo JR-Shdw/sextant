@@ -65,16 +65,13 @@ sextant/
 | `make install` | crée `.venv` et installe les dépendances |
 | `make lint` | valide les YAML du `catalog/` (schéma + FKs) |
 | `make scan` | régénère `catalog/files.yaml` (index des fichiers) |
-| `make leak-scan` | échoue sur toute IP RFC1918 hors `.leakscan-allow` |
 | `make serve` | sert l'UI CRUD sur `127.0.0.1:8001` |
 | `tools/project_init.py <id>` | scaffold un dossier projet (cinq audiences) |
 | `tools/user-task <projet> "<titre>"` | crée une tâche humaine canonique |
 
-## Repo public, contenu privé
+## Commandes Claude Code
 
-Tous les défauts d'outils pointent sur `127.0.0.1` ou exigent une variable d'environnement. Aucune IP de réseau privé n'est commitée. Le garde-fou `tools/leak_scan.py` (intégré à la CI Woodpecker) refait le tour à chaque push : si une IP RFC1918 apparaît hors allowlist, le build casse.
-
-Pour publier un fork avec ton propre catalog peuplé : ajoute les chemins sensibles à `.gitignore` (les lignes commentées sont déjà prêtes) ou tiens deux working trees séparés, l'un public, l'autre privé.
+Le repo embarque `.claude/commands/sextant-wrap.md` : depuis Claude Code, `/sextant-wrap <projet>` clôt la session courante et propose un diff de `<projet>/last/session.md` (validation explicite avant écriture).
 
 ## Licence
 

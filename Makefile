@@ -6,14 +6,13 @@ PORT := 8001
 LOG := /tmp/sextant_server.log
 PIDFILE := /tmp/sextant_server.pid
 
-.PHONY: help install lint scan leak-scan serve stop restart status ruff clean
+.PHONY: help install lint scan serve stop restart status ruff clean
 
 help:
 	@echo "Targets:"
 	@echo "  install     creer .venv + installer deps"
 	@echo "  lint        valider les YAML (catalog_lint.py)"
 	@echo "  scan        regenerer catalog/files.yaml + _index.tsv"
-	@echo "  leak-scan   chasser les IP RFC1918 hors allowlist"
 	@echo "  serve       demarrer le serveur CRUD ($(HOST):$(PORT)) en background"
 	@echo "  stop        arreter le serveur"
 	@echo "  restart     stop + serve"
@@ -30,9 +29,6 @@ lint:
 
 scan:
 	$(PY) tools/catalog_scan.py
-
-leak-scan:
-	$(PY) tools/leak_scan.py
 
 serve:
 	@if [ -f $(PIDFILE) ] && kill -0 $$(cat $(PIDFILE)) 2>/dev/null; then \
