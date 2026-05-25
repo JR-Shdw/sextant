@@ -96,3 +96,9 @@ Détails et flags : `helpers/claude/user-task.md`. **Ne JAMAIS diluer une tâche
 - `tools/task_emit.py <projet> "<titre>"` : ajoute tâche dans `<projet>/user/tasks.org`
 
 Venv local : `.venv/` (racine). `make install` pour le créer.
+
+## Commandes Claude Code
+
+| Commande | Rôle | Définition |
+|---|---|---|
+| `/sextant-wrap <projet>` | clôt la session, propose un diff de `<projet>/last/session.md` avant écriture | `.claude/commands/sextant-wrap.md` |
