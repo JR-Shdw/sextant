@@ -1,6 +1,6 @@
 # sextant
 
-Catalogue minimaliste et helpers multi-audience pour solo opérateurs self-hosted.
+Catalogue minimaliste et helpers multi-audience.
 
 Inspiration : un instrument de navigation qui donne ta position avec quelques mesures simples. Ici, on donne à une IA (Claude, OpenAI, ta plateforme locale) la position de ton écosystème — projets, forges, nodes, vaults, fichiers — en quelques centaines de tokens au lieu de plusieurs dizaines de milliers.
 
