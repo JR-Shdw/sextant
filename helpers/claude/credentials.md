@@ -7,7 +7,6 @@ Tu ne fais rien. Push/fetch HTTPS marchent partout.
 
 | host | namespace | secret | user |
 |---|---|---|---|
-| gitea.c0re.me | claude | gitea-claude-write | claude |
 | 127.0.0.1 / localhost | claude | forgejo-claude-write | claude |
 
 ## Si push échoue
